@@ -1,4 +1,6 @@
-#include <vector>
+#ifndef GRAPHNODE_H
+#define GRAPHNODE_H
+
 #include <unordered_set>
 
 using namespace std;
@@ -16,5 +18,8 @@ class GraphNode
 
         void addNeighbor(int nodeValue);
         void removeNeighbor(int nodeValue);
-        unordered_set<int> getAllNeighbors();
+        unordered_set<int> getAllNeighbors();    
+        int getNeighborhoodSize();
 };
+
+#endif //GRAPHNODE_H

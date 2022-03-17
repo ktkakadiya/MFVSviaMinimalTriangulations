@@ -1,7 +1,6 @@
-#include "graphNode.h"
+#include <iostream>
 
-#include <vector>
-#include <unordered_set>
+#include "graphNode.h"
 
 using namespace std;
 
@@ -53,4 +52,13 @@ void GraphNode::removeNeighbor(int nodeValue)
 unordered_set<int> GraphNode::getAllNeighbors()
 {
     return setNeighbors;
+}
+
+/**
+ * Get the size of neighborhood
+ * @return int 
+ */
+int GraphNode::getNeighborhoodSize()
+{
+    return setNeighbors.size();
 }

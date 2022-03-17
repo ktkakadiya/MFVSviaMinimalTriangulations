@@ -1,7 +1,7 @@
-#include "graph.h"
-
-#include <vector>
+#include <iostream>
 #include <math.h>
+
+#include "graph.h"
 
 using namespace std;
 
@@ -11,11 +11,11 @@ using namespace std;
  */
 Graph::Graph(int numNodes)
 {
-    nNodes = numNodes;
+    nNodes = 0;
     nEdges = 0;
-    nNodeVal = 0;
+    nNodeVal = 1;
 
-    for(int i=0; i<nNodes; i++)
+    for(int i=0; i<numNodes; i++)
     {
         this->addNode();
     }
@@ -45,8 +45,8 @@ int Graph::getTotalEdges()
  */
 int Graph::addNode()
 {
-    GraphNode node(nNodeVal);
-    mapNodes[nNodeVal] = &node;
+    GraphNode* node = new GraphNode(nNodeVal);
+    mapNodes[nNodeVal] = node;
     nNodeVal++;
     nNodes++;
     return nNodeVal;
@@ -90,7 +90,7 @@ void Graph::addEdge(int fromNodeVal, int toNodeVal)
     GraphNode* toNode = this->getNode(toNodeVal);
     if(fromNode == nullptr || toNode == nullptr)
         return;
-
+  
     int key = this->generateEdgeKey(fromNodeVal, toNodeVal);
 
     if(mapEdges.find(key) == mapEdges.end())
@@ -157,15 +157,52 @@ int Graph::generateEdgeKey(int fromNodeVal, int toNodeVal)
 
 /**
  * Remove all edges of the given node
- * @param node 
- * @return int 
+ * @param node
  */
-int Graph::removeAllEdgesOfNode(GraphNode* node)
+void Graph::removeAllEdgesOfNode(GraphNode* node)
 {
     unordered_set<int> setNeighbors = node->getAllNeighbors();
     for(auto it = setNeighbors.begin(); it != setNeighbors.end(); it++)
     {
         int neighborVal = *it;
         this->removeEdge(node->getNodeValue(), neighborVal);
+    }
+}
+
+/**
+ * Print graph
+ */
+void Graph::printGraph()
+{
+    cout << "Total nodes : " << nNodes << endl;
+    cout << "Total edges : " << nEdges << endl;
+    cout << endl;
+
+    cout << "Edges" << endl;
+    int key = 0;
+    for(int i=1; i<=nNodes; i++)
+    {
+        for(int j=i+1; j<=nNodes; j++)
+        {
+            key = pow(j, 2) - i + 1;
+            if(mapEdges.find(key) != mapEdges.end())
+            {
+                cout << i << " " << j << endl;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "Neighbors" << endl;
+    GraphNode* node;
+    for(int i=1; i<=nNodes; i++)
+    {
+        cout << "Neighbors of " << i << " : ";
+        node = this->getNode(i);
+        for(int j : node->getAllNeighbors())
+        {
+            cout << j << " ";
+        }
+        cout << endl;
     }
 }

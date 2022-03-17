@@ -1,7 +1,9 @@
-#include "graphNode.h"
+#ifndef GRAPH_H
+#define GRAPH_H
 
-#include <vector>
 #include <unordered_map>
+
+#include "graphNode.h"
 
 using namespace std;
 
@@ -14,7 +16,7 @@ class Graph
         int nNodeVal;
 
         int generateEdgeKey(int fromNodeVal, int toNodeVal);
-        int removeAllEdgesOfNode(GraphNode* node);
+        void removeAllEdgesOfNode(GraphNode* node);
 
     public:
         Graph(int numNodes);
@@ -28,4 +30,8 @@ class Graph
         void addEdge(int fromNodeVal, int toNodeVal);
         void removeEdge(int fromNodeVal, int toNodeVal);
         bool containsEdge(int fromNodeVal, int toNodeVal);
+        
+        void printGraph();
 };
+
+#endif //GRAPH_H
