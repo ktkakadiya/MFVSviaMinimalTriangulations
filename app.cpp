@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "src/graph/graph.h"
+#include "src/minimalSeparator.h"
 
 using namespace std;
 
@@ -40,8 +41,9 @@ Graph initGraph(string strFilePath)
 
 int main()
 {
-    string strFilePath("testGraphs/random/graph1.txt");
+    string strFilePath("testGraphs/random/graph2.txt");
     Graph graph = initGraph(strFilePath);
-    graph.printGraph();
+    //graph.printGraph();
+    MS::findMinimalSeparator(&graph);
     return 0;
 }

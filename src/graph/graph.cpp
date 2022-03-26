@@ -13,7 +13,7 @@ Graph::Graph(int numNodes)
 {
     nNodes = 0;
     nEdges = 0;
-    nNodeVal = 1;
+    nNodeVal = 0;
 
     for(int i=0; i<numNodes; i++)
     {
@@ -45,9 +45,8 @@ int Graph::getTotalEdges()
  */
 int Graph::addNode()
 {
-    GraphNode* node = new GraphNode(nNodeVal);
-    mapNodes[nNodeVal] = node;
-    nNodeVal++;
+    setNodes.insert(++nNodeVal);
+    mapNeighbor[nNodeVal] = unordered_set<int>(0);
     nNodes++;
     return nNodeVal;
 }
@@ -56,84 +55,66 @@ int Graph::addNode()
  * Remove given node from graph
  * @param nodeVal 
  */
-void Graph::removeNode(int nodeVal)
+void Graph::removeNode(int node)
 {
-    if(mapNodes.find(nodeVal) != mapNodes.end())
+    if(setNodes.find(node) != setNodes.end())
     {
-        this->removeAllEdgesOfNode(mapNodes[nodeVal]);
-        delete mapNodes[nodeVal];
-        mapNodes.erase(nodeVal);
+        this->removeAllEdgesOfNode(node);
+        setNodes.erase(node);
         nNodes--;
     }
 }
 
 /**
- * Get node pointer from node value
- * @param nodeVal 
- * @return GraphNode* 
- */
-GraphNode* Graph::getNode(int nodeVal)
-{
-    if(mapNodes.find(nodeVal) == mapNodes.end())
-        return nullptr;
-    return mapNodes[nodeVal];
-}
-
-/**
  * Add edge between two given nodes
- * @param fromNodeVal 
- * @param toNodeVal 
+ * @param fromNode 
+ * @param toNode 
  */
-void Graph::addEdge(int fromNodeVal, int toNodeVal)
+void Graph::addEdge(int fromNode, int toNode)
 {
-    GraphNode* fromNode = this->getNode(fromNodeVal);
-    GraphNode* toNode = this->getNode(toNodeVal);
-    if(fromNode == nullptr || toNode == nullptr)
+    if(setNodes.find(fromNode) == setNodes.end() || setNodes.find(toNode) == setNodes.end())
         return;
   
-    int key = this->generateEdgeKey(fromNodeVal, toNodeVal);
-
+    int key = this->generateEdgeKey(fromNode, toNode);
     if(mapEdges.find(key) == mapEdges.end())
     {
         mapEdges[key] = 1;
-        fromNode->addNeighbor(toNodeVal);
-        toNode->addNeighbor(fromNodeVal);
+        mapNeighbor[fromNode].insert(toNode);
+        mapNeighbor[toNode].insert(fromNode);
         nEdges++;
     }
 }
 
 /**
  * Remove edge between two given nodes
- * @param fromNodeVal 
- * @param toNodeVal 
+ * @param fromNode 
+ * @param toNode 
  */
-void Graph::removeEdge(int fromNodeVal, int toNodeVal)
+void Graph::removeEdge(int fromNode, int toNode)
 {
-    GraphNode* fromNode = this->getNode(fromNodeVal);
-    GraphNode* toNode = this->getNode(toNodeVal);
-    if(fromNode == nullptr || toNode == nullptr)
+    if(setNodes.find(fromNode) == setNodes.end() || setNodes.find(toNode) == setNodes.end())
         return;
 
-    int key = this->generateEdgeKey(fromNodeVal, toNodeVal);
+    int key = this->generateEdgeKey(fromNode, toNode);
     if(mapEdges.find(key) != mapEdges.end() && mapEdges[key] == 1)
     {
         mapEdges.erase(key);
-        fromNode->removeNeighbor(toNodeVal);
-        toNode->removeNeighbor(fromNodeVal);
+        mapNeighbor[fromNode].erase(toNode);
+        mapNeighbor[toNode].erase(fromNode);
         nEdges--;
     }
 }
 
 /**
  * Check whether there is an edge between two nodes
- * @param fromNodeVal 
- * @param toNodeVal 
+ * @param fromNode 
+ * @param toNode 
  * @return true 
  * @return false 
  */
-bool Graph::containsEdge(int fromNodeVal, int toNodeVal)
+bool Graph::containsEdge(int fromNode, int toNode)
 {
-    int key = this->generateEdgeKey(fromNodeVal, toNodeVal);
+    int key = this->generateEdgeKey(fromNode, toNode);
     if(mapEdges.find(key) != mapEdges.end() && mapEdges[key] == 1)
     {
         return true;
@@ -147,10 +128,10 @@ bool Graph::containsEdge(int fromNodeVal, int toNodeVal)
  * @param toNodeVal 
  * @return int 
  */
-int Graph::generateEdgeKey(int fromNodeVal, int toNodeVal)
+int Graph::generateEdgeKey(int fromNode, int toNode)
 {
-    int maxNodeVal = max(fromNodeVal, toNodeVal);
-    int minNodeVal = min(fromNodeVal, toNodeVal);
+    int maxNodeVal = max(fromNode, toNode);
+    int minNodeVal = min(fromNode, toNode);
     int key = pow(maxNodeVal, 2) - minNodeVal + 1;
     return key;
 }
@@ -159,13 +140,12 @@ int Graph::generateEdgeKey(int fromNodeVal, int toNodeVal)
  * Remove all edges of the given node
  * @param node
  */
-void Graph::removeAllEdgesOfNode(GraphNode* node)
+void Graph::removeAllEdgesOfNode(int node)
 {
-    unordered_set<int> setNeighbors = node->getAllNeighbors();
+    unordered_set<int> setNeighbors = mapNeighbor[node];
     for(auto it = setNeighbors.begin(); it != setNeighbors.end(); it++)
     {
-        int neighborVal = *it;
-        this->removeEdge(node->getNodeValue(), neighborVal);
+        this->removeEdge(node, *it);
     }
 }
 
@@ -194,12 +174,10 @@ void Graph::printGraph()
     cout << endl;
 
     cout << "Neighbors" << endl;
-    GraphNode* node;
     for(int i=1; i<=nNodes; i++)
     {
         cout << "Neighbors of " << i << " : ";
-        node = this->getNode(i);
-        for(int j : node->getAllNeighbors())
+        for(int j : mapNeighbor[i])
         {
             cout << j << " ";
         }

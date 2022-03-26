@@ -1,35 +1,35 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <unordered_set>
 #include <unordered_map>
-
-#include "graphNode.h"
 
 using namespace std;
 
 class Graph
 {
     private:
-        unordered_map<int, GraphNode*> mapNodes;
-        unordered_map<int, int> mapEdges; //x^2-y+1 where x and y are node values and x > y
-        int nNodes, nEdges;
-        int nNodeVal;
+        int nNodes, nEdges, nNodeVal;
+        unordered_set<int> setNodes;
 
-        int generateEdgeKey(int fromNodeVal, int toNodeVal);
-        void removeAllEdgesOfNode(GraphNode* node);
+
+        int generateEdgeKey(int fromNode, int toNode);
+        void removeAllEdgesOfNode(int node);
 
     public:
+        unordered_map<int, int> mapEdges; //x^2-y+1 where x and y are node values and x > y
+        unordered_map<int, unordered_set<int>> mapNeighbor;
+        
         Graph(int numNodes);
         int getTotalNodes();
         int getTotalEdges();
 
         int addNode();
-        void removeNode(int nodeVal);
-        GraphNode* getNode(int nodeVal);
+        void removeNode(int node);
 
-        void addEdge(int fromNodeVal, int toNodeVal);
-        void removeEdge(int fromNodeVal, int toNodeVal);
-        bool containsEdge(int fromNodeVal, int toNodeVal);
+        void addEdge(int fromNode, int toNode);
+        void removeEdge(int fromNode, int toNode);
+        bool containsEdge(int fromNode, int toNode);
         
         void printGraph();
 };

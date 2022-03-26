@@ -1,18 +1,19 @@
 CC=g++
 CFLAGS = -g -Wall
 GPATH = ./src/graph
+SPATH = ./src
 OPATH = ./objectFiles
 
 all: app
 
-app: app.cpp graph.o graphNode.o
-	$(CC) $(CFLAGS) app.cpp $(OPATH)/graph.o $(OPATH)/graphNode.o -o app
+app: app.cpp minimalSeparator.o graph.o
+	$(CC) $(CFLAGS) app.cpp $(OPATH)/minimalSeparator.o  $(OPATH)/graph.o -o app
+
+minimalSeparator.o: $(SPATH)/minimalSeparator.cpp $(SPATH)/minimalSeparator.h
+	$(CC) $(CFLAGS) -c $(SPATH)/minimalSeparator.cpp -o $(OPATH)/minimalSeparator.o
 
 graph.o: $(GPATH)/graph.cpp $(GPATH)/graph.h
 	$(CC) $(CFLAGS) -c $(GPATH)/graph.cpp -o $(OPATH)/graph.o
-
-graphNode.o: $(GPATH)/graphNode.cpp $(GPATH)/graphNode.h
-	$(CC) $(CFLAGS) -c $(GPATH)/graphNode.cpp -o $(OPATH)/graphNode.o
 
 clean:
 	rm $(OPATH)/*.o app
