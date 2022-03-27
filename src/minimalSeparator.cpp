@@ -1,7 +1,3 @@
-
-#ifndef MINSEP_H
-#define MINSEP_H
-
 #include <algorithm>
 #include <set>
 #include <iostream>
@@ -10,20 +6,20 @@
 
 using namespace std;
 
-namespace MS
+namespace MFVS
 {
-    void componentDFS(Graph* graph, int nodeVal, int* conNode, vector<int> &compNeighborhood)
+    void minSepDFS(Graph* graph, int nodeVal, int* conNode, vector<int> &curMinSep)
     {
         conNode[nodeVal] = 2;
         for(int i : graph->mapNeighbor[nodeVal])
         {
             if(conNode[i] == 0)
             {
-                componentDFS(graph, i, conNode, compNeighborhood);
+                minSepDFS(graph, i, conNode, curMinSep);
             }
             else if(conNode[i] == 1)
             {
-                compNeighborhood.push_back(i);
+                curMinSep.push_back(i);
                 conNode[i] = 3;
             }
         }           
@@ -63,17 +59,17 @@ namespace MS
                     {
                         if(conNodes[k] == 0)
                         {
-                            vector<int> compNeighborhood;
-                            componentDFS(graph, k, conNodes, compNeighborhood);
-                            for(int l : compNeighborhood)
+                            vector<int> curMinSep;
+                            minSepDFS(graph, k, conNodes, curMinSep);
+                            for(int l : curMinSep)
                             {
                                 conNodes[l] = 1;
                             }
-                            sort(compNeighborhood.begin(), compNeighborhood.end());
-                            if(setMinSeps.count(compNeighborhood) == 0)
+                            sort(curMinSep.begin(), curMinSep.end());
+                            if(setMinSeps.count(curMinSep) == 0)
                             {
-                                setMinSeps.insert(compNeighborhood);
-                                lstMinSeps.push_back(compNeighborhood);
+                                setMinSeps.insert(curMinSep);
+                                lstMinSeps.push_back(curMinSep);
                             }
                         }
                     }
@@ -108,17 +104,17 @@ namespace MS
                     {
                         if(conNodes[k] == 0)
                         {
-                            vector<int> compNeighborhood;
-                            componentDFS(graph, k, conNodes, compNeighborhood);
-                            for(int l : compNeighborhood)
+                            vector<int> curMinSep;
+                            minSepDFS(graph, k, conNodes, curMinSep);
+                            for(int l : curMinSep)
                             {
                                 conNodes[l] = 1;
                             }
-                            sort(compNeighborhood.begin(), compNeighborhood.end());
-                            if(setMinSeps.count(compNeighborhood) == 0)
+                            sort(curMinSep.begin(), curMinSep.end());
+                            if(setMinSeps.count(curMinSep) == 0)
                             {
-                                setMinSeps.insert(compNeighborhood);
-                                lstMinSeps.push_back(compNeighborhood);
+                                setMinSeps.insert(curMinSep);
+                                lstMinSeps.push_back(curMinSep);
                             }
                         }
                     }
@@ -127,19 +123,6 @@ namespace MS
         }
 
 	    sort(lstMinSeps.begin(), lstMinSeps.end());
-
-        std::cout << "Printing min seps" << endl;
-        for(auto lv : lstMinSeps)
-        {
-            for(auto no : lv)
-            {
-                std::cout  << no << " ";
-            }
-            std::cout << endl;
-        }
         return lstMinSeps;
     }
 }
-
-
-#endif //MINSEP_H

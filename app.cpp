@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "src/graph/graph.h"
-#include "src/minimalSeparator.h"
+#include "src/minimumFeedbackVertexSet.h"
 
 using namespace std;
 
@@ -44,6 +44,6 @@ int main()
     string strFilePath("testGraphs/random/graph2.txt");
     Graph graph = initGraph(strFilePath);
     //graph.printGraph();
-    MS::findMinimalSeparator(&graph);
+    MFVS::findMinimumFeedbackVertexSet(&graph);
     return 0;
 }
