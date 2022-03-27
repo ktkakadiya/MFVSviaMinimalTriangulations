@@ -81,14 +81,61 @@ namespace MS
             }
         }
 
-        cout << "Printing min seps" << endl;
+        for(int i=0; i<(int)lstMinSeps.size(); i++)
+        {
+            vector<int> minSep = lstMinSeps[i];
+            for(int node : minSep)
+            {
+                //Reset connection vector
+                for(int j=0; j<n; j++)
+                {
+                    conNodes[j] = 0;
+                }
+
+                //set neighbors and separator connection vector
+                for(int curNeighbor : graph->mapNeighbor[node])
+                {
+                    conNodes[curNeighbor] = 1; 
+                }
+                for(int sepNode : minSep)
+                {
+                    conNodes[sepNode] = 1;
+                }
+
+                for(int curNeighbor : graph->mapNeighbor[node])
+                {
+                    for(int k : graph->mapNeighbor[curNeighbor])
+                    {
+                        if(conNodes[k] == 0)
+                        {
+                            vector<int> compNeighborhood;
+                            componentDFS(graph, k, conNodes, compNeighborhood);
+                            for(int l : compNeighborhood)
+                            {
+                                conNodes[l] = 1;
+                            }
+                            sort(compNeighborhood.begin(), compNeighborhood.end());
+                            if(setMinSeps.count(compNeighborhood) == 0)
+                            {
+                                setMinSeps.insert(compNeighborhood);
+                                lstMinSeps.push_back(compNeighborhood);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+	    sort(lstMinSeps.begin(), lstMinSeps.end());
+
+        std::cout << "Printing min seps" << endl;
         for(auto lv : lstMinSeps)
         {
             for(auto no : lv)
             {
-                cout << no << " ";
+                std::cout  << no << " ";
             }
-            cout << endl;
+            std::cout << endl;
         }
         return lstMinSeps;
     }

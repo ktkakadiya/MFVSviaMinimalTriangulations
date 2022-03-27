@@ -13,7 +13,6 @@ Graph::Graph(int numNodes)
 {
     nNodes = 0;
     nEdges = 0;
-    nNodeVal = 0;
 
     for(int i=0; i<numNodes; i++)
     {
@@ -41,14 +40,12 @@ int Graph::getTotalEdges()
 
 /** 
  * Add new node into grpah
- * @return int 
  */
-int Graph::addNode()
+void Graph::addNode()
 {
-    setNodes.insert(++nNodeVal);
-    mapNeighbor[nNodeVal] = unordered_set<int>(0);
+    setNodes.insert(nNodes);
+    mapNeighbor[nNodes] = unordered_set<int>(0);
     nNodes++;
-    return nNodeVal;
 }
 
 /**

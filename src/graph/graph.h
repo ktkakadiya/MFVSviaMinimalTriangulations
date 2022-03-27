@@ -9,7 +9,7 @@ using namespace std;
 class Graph
 {
     private:
-        int nNodes, nEdges, nNodeVal;
+        int nNodes, nEdges;
         unordered_set<int> setNodes;
 
 
@@ -24,7 +24,7 @@ class Graph
         int getTotalNodes();
         int getTotalEdges();
 
-        int addNode();
+        void addNode();
         void removeNode(int node);
 
         void addEdge(int fromNode, int toNode);
