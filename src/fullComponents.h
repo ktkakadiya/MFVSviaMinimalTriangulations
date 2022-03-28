@@ -9,7 +9,7 @@ using namespace std;
 
 namespace MFVS
 {
-    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& minimalSep);
+    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& minSeparator);
 }
 
 #endif //FULCOM_H
