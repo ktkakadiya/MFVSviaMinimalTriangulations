@@ -9,7 +9,8 @@ using namespace std;
 
 namespace MFVS
 {
-    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& minSeparator);
+    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& vecNodes);
+    bool hasFullComponents(Graph* graph, vector<int>& vecNodes);
 }
 
 #endif //FULCOM_H

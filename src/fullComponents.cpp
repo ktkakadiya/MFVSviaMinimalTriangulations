@@ -37,22 +37,22 @@ namespace MFVS
     }
 
     /**
-     * @brief Get the Full Components given minimal separator for given graph
+     * @brief Get the Full Components of the graph G[V/X] has any full components
      * 
-     * @param graph 
-     * @param minSeparator 
+     * @param graph G = (V,E)
+     * @param vecNodes X
      * @return vector<vector<int>> 
      */
-    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& minSeparator)
+    vector<vector<int>> getFullComponents(Graph* graph, vector<int>& vecNodes)
     {
         vector<vector<int>> vecComp;
 
-        int uSepSize = (int)minSeparator.size();
+        int uSepSize = (int)vecNodes.size();
         int n = graph->getTotalNodes();
         int conNodes[n] = {0};
 
         int curIndex = 2;
-        for(int node : minSeparator)
+        for(int node : vecNodes)
         {
             conNodes[node] = curIndex;
         }
@@ -72,5 +72,69 @@ namespace MFVS
             }
         }
         return vecComp;
+    }
+
+    /**
+     * @brief Computes component size by DFS
+     * 
+     * @param graph 
+     * @param nodeVal 
+     * @param conNodes 
+     * @param curIndex
+     * @return int 
+     */
+    int getComponentSizeDFS(Graph* graph, int nodeVal, int* conNodes, int curIndex)
+    {
+        conNodes[nodeVal] = 1;
+
+        int uCompSize = 0;
+        for(int i : graph->mapNeighbor[nodeVal])
+        {
+            if(conNodes[i] == 0)
+            {
+                uCompSize += getComponentSizeDFS(graph, i, conNodes, curIndex);
+            }
+            else if(conNodes[i] >= 2 && conNodes[i] < curIndex)
+            {
+                conNodes[i] = curIndex;
+                uCompSize++;
+            }
+        }
+        return uCompSize;
+    }
+
+    /**
+     * @brief Check whether the graph G[V/X] has any full components
+     * 
+     * @param graph G = (V,E)
+     * @param vecNodes X
+     * @return vector<vector<int>> 
+     */
+    bool hasFullComponents(Graph* graph, vector<int>& vecNodes)
+    {
+        int uSepSize = (int)vecNodes.size();
+        int n = graph->getTotalNodes();
+        int conNodes[n] = {0};
+
+        int curIndex = 2;
+        for(int node : vecNodes)
+        {
+            conNodes[node] = curIndex;
+        }
+
+        for(int curNode=0; curNode<n; curNode++)
+        {
+            if(conNodes[curNode] == 0)
+            {
+                curIndex++;
+                vector<int> component;
+                int compSize = componentDFS(graph, curNode, conNodes, curIndex, component);
+                if(compSize == uSepSize)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

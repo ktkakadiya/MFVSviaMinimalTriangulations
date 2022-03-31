@@ -41,7 +41,7 @@ Graph initGraph(string strFilePath)
 
 int main()
 {
-    string strFilePath("testGraphs/random/graph2.txt");
+    string strFilePath("testGraphs/manual/graph2.txt");
     Graph graph = initGraph(strFilePath);
     //graph.printGraph();
     MFVS::findMinimumFeedbackVertexSet(&graph);
