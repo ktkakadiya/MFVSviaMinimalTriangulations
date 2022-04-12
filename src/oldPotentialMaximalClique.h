@@ -1,5 +1,5 @@
-#ifndef PMXCLQ_H
-#define PMXCLQ_H
+#ifndef OPMXCLQ_H
+#define OPMXCLQ_H
 
 #include <vector>
 #include "graph/graph.h"
@@ -8,8 +8,8 @@ using namespace std;
 
 namespace MFVS
 {
-    vector<vector<int>> getAllPotentialMaximalCliques(Graph* graph);
+    vector<vector<int>> getOldAllPotentialMaximalCliques(Graph* graph);
     bool isPotentialMaximalClique(Graph* graph, vector<int> vecNodes);
 }
 
-#endif //PMXCLQ_H
+#endif //OPMXCLQ_H

@@ -1,4 +1,4 @@
-#include "potentialMaximalClique.h"
+#include "oldPotentialMaximalClique.h"
 #include "minimalSeparator.h"
 #include "fullComponents.h"
 #include "setOperations.h"
@@ -197,7 +197,7 @@ namespace MFVS
      * @param graph 
      * @return vector<vector<int>> 
      */
-    vector<vector<int>> getAllPotentialMaximalCliques(Graph* graph)
+    vector<vector<int>> getOldAllPotentialMaximalCliques(Graph* graph)
     {
         int n = graph->getTotalNodes();
 

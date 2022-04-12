@@ -6,14 +6,17 @@ OPATH = ./objectFiles
 
 all: app
 
-app: app.cpp minimumFeedbackVertexSet.o potentialMaximalClique.o fullComponents.o  minimalSeparator.o graph.o setOperations.o
-	$(CC) $(CFLAGS) app.cpp $(OPATH)/minimumFeedbackVertexSet.o $(OPATH)/potentialMaximalClique.o $(OPATH)/fullComponents.o $(OPATH)/minimalSeparator.o  $(OPATH)/graph.o $(OPATH)/setOperations.o -o app
+app: app.cpp minimumFeedbackVertexSet.o oldPotentialMaximalClique.o newPotentialMaximalClique.o fullComponents.o  minimalSeparator.o graph.o setOperations.o
+	$(CC) $(CFLAGS) app.cpp $(OPATH)/minimumFeedbackVertexSet.o $(OPATH)/oldPotentialMaximalClique.o $(OPATH)/newPotentialMaximalClique.o $(OPATH)/fullComponents.o $(OPATH)/minimalSeparator.o  $(OPATH)/graph.o $(OPATH)/setOperations.o -o app
 
 minimumFeedbackVertexSet.o: $(SPATH)/minimumFeedbackVertexSet.cpp $(SPATH)/minimumFeedbackVertexSet.h
 	$(CC) $(CFLAGS) -c $(SPATH)/minimumFeedbackVertexSet.cpp -o $(OPATH)/minimumFeedbackVertexSet.o
 
-potentialMaximalClique.o: $(SPATH)/potentialMaximalClique.cpp $(SPATH)/potentialMaximalClique.h
-	$(CC) $(CFLAGS) -c $(SPATH)/potentialMaximalClique.cpp -o $(OPATH)/potentialMaximalClique.o
+oldPotentialMaximalClique.o: $(SPATH)/oldPotentialMaximalClique.cpp $(SPATH)/oldPotentialMaximalClique.h
+	$(CC) $(CFLAGS) -c $(SPATH)/oldPotentialMaximalClique.cpp -o $(OPATH)/oldPotentialMaximalClique.o
+
+newPotentialMaximalClique.o: $(SPATH)/newPotentialMaximalClique.cpp $(SPATH)/newPotentialMaximalClique.h
+	$(CC) $(CFLAGS) -c $(SPATH)/newPotentialMaximalClique.cpp -o $(OPATH)/newPotentialMaximalClique.o
 
 fullComponents.o: $(SPATH)/fullComponents.cpp $(SPATH)/fullComponents.h
 	$(CC) $(CFLAGS) -c $(SPATH)/fullComponents.cpp -o $(OPATH)/fullComponents.o
