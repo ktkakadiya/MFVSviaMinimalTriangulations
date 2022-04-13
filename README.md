@@ -1,5 +1,5 @@
 # FVSviaTriangulations
-The FVSviaTriangulations implements the method proposed in [1] for finding the Minimum Feedback Vertex Set for a given undirected graph using Potential Maximal Cliques.
+The FVSviaTriangulations repository implements the method proposed in [1] for finding the Minimum Feedback Vertex Set for a given undirected graph using Potential Maximal Cliques.
 
 ## Table of contents
 * [Introduction](#introduction)
