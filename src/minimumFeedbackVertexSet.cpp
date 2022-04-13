@@ -5,7 +5,6 @@
 #include "newPotentialMaximalClique.h"
 #include "setOperations.h"
 
-#include <iostream>
 #include <algorithm>
 #include <chrono>
 
@@ -15,72 +14,10 @@ using namespace std;
 namespace MFVS
 {
     /**
-     * @brief Print all minimal separators
+     * @brief Construct full blocks
      * 
-     * @param lstMinSeps 
-     */
-    void printMinimalSeparators(vector<vector<int>> lstMinSeps)
-    { 
-        std::cout << "Printing min seps" << endl;
-        for(auto lv : lstMinSeps)
-        {
-            for(auto no : lv)
-            {
-                std::cout  << no << " ";
-            }
-            std::cout << endl;
-        }
-    }
-
-    /**
-     * @brief Print full components of minimal separator
-     * 
-     * @param minSep 
-     * @param lstComponent
-     */
-    void printFullComponents(vector<int> minSep, vector<vector<int>> lstComponent)
-    { 
-        std::cout << "Minimal Separator " << endl;
-        for(auto no : minSep)
-        {
-            std::cout  << no << " ";
-        }
-        std::cout << endl;
-
-        std::cout << "Full componenets " << endl;
-        for(auto lv : lstComponent)
-        {
-            for(auto no : lv)
-            {
-                std::cout  << no << " ";
-            }
-            std::cout << endl;
-        }
-    }
-
-    /**
-     * @brief Print all potential maximal cliques of graph
-     * 
-     * @param lstPMC 
-     */
-    void printPotentialMaximalCliques(vector<vector<int>> lstPMC)
-    { 
-        std::cout << "Printing potential maximal cliques" << endl;
-        for(auto pmc : lstPMC)
-        {
-            for(auto no : pmc)
-            {
-                std::cout  << no << " ";
-            }
-            std::cout << endl;
-        }
-    }
-
-    /**
-     * @brief Construct good triplets of graph
-     * 
-     * @param lstMinSeps 
-     * @param lstFullComp 
+     * @param lstMinSeps Set of minimal separators
+     * @param lstFullComp Set of full components for each separators
      * @return vector<vector<vector<int>>>
      */
     vector<vector<vector<int>>> constructFullBlocks(vector<vector<int>> lstMinSeps, vector<vector<vector<int>>> lstFullComp)
@@ -101,14 +38,14 @@ namespace MFVS
     }
 
     /**
-     * @brief Construct good triplets of graph
+     * @brief Construct good triples of graph
      * 
-     * @param lstMinSeps 
-     * @param lstFullBlock 
-     * @param lstPMC 
+     * @param lstMinSeps Set of minimal separators
+     * @param lstFullBlock Set of full blocks for each separators
+     * @param lstPMC Set of potential maximal cliques
      * @return vector<vector<vector<int>>>
      */
-    vector<vector<int>> constructGoodTriplet(vector<vector<int>> lstMinSeps, vector<vector<vector<int>>> lstFullBlock, vector<vector<int>> lstPMC)
+    vector<vector<int>> constructGoodTriples(vector<vector<int>> lstMinSeps, vector<vector<vector<int>>> lstFullBlock, vector<vector<int>> lstPMC)
     {
         vector<vector<int>> lstTripletIdx;
         int np = lstPMC.size();
@@ -135,7 +72,7 @@ namespace MFVS
             }
         }
 
-        //Sort triplets based on block sizes
+        //Sort triples based on block sizes
         auto comparator = [&](vector<int> triplet1, vector<int> triplet2) 
         {
             if (lstFullBlock[triplet1[0]][triplet1[1]].size() != lstFullBlock[triplet2[0]][triplet2[1]].size()) 
@@ -156,15 +93,16 @@ namespace MFVS
      * 
      * @param graph 
      */
-    void findMinimumFeedbackVertexSet(Graph* graph)
+    vector<int> findMinimumFeedbackVertexSet(Graph* graph)
     {
+        //tree width for maximum induced forest is 1
         int treeWidth = 1;
 
+        vector<int> lstTimes;
         auto start = high_resolution_clock::now();
 
         //Find minimal separators
         vector<vector<int>> lstMinSeps = MFVS::findMinimalSeparator(graph);
-        //printMinimalSeparators(lstMinSeps);
 
         //Remove separators of sie treewidth + 1
         for(auto i = lstMinSeps.begin(); i != lstMinSeps.end(); ++i)
@@ -178,56 +116,58 @@ namespace MFVS
 
         auto stop = high_resolution_clock::now();
         auto duration1 = duration_cast<microseconds>(stop-start);
-        cout << "Minsep : " << duration1.count() << endl;
-        
+        lstTimes.push_back(duration1.count());
+
         start = high_resolution_clock::now();
         
+        //Generate all full components
         vector<vector<vector<int>>> lstFullComp;
-        //std::cout << "Printing full components " << endl;
         for(vector<int> minSep : lstMinSeps)
         {
             vector<vector<int>> lstComp = MFVS::getFullComponents(graph, minSep);
             lstFullComp.push_back(lstComp);
-            //printFullComponents(minSep, lstComp);
         }
 
-        //Get full blocks
+        //Generate all full blocks
         vector<vector<vector<int>>> lstFullBlock = MFVS::constructFullBlocks(lstMinSeps, lstFullComp);
 
         stop = high_resolution_clock::now();
         auto duration2 = duration_cast<microseconds>(stop-start);
-        cout << "Full blocks : " << duration2.count() << endl;
+        lstTimes.push_back(duration2.count());
         
         start = high_resolution_clock::now();
 
-        //Find all potential maximal cliques
+        //Find all potential maximal cliques using the method mentioned in [2]
         vector<vector<int>> lstOldPMC = MFVS::getOldAllPotentialMaximalCliques(graph);
-        printPotentialMaximalCliques(lstOldPMC);
 
         stop = high_resolution_clock::now();
         auto duration3 = duration_cast<microseconds>(stop-start);
-        cout << "old PMCs : " << duration3.count() << endl;
+        lstTimes.push_back(duration3.count());
 
         start = high_resolution_clock::now();
-        
-        //Find all potential maximal cliques
+
+        //Find all potential maximal cliques using the method mentioned in [1]
         vector<vector<int>> lstNewPMC = MFVS::getNewAllPotentialMaximalCliques(graph);
-        printPotentialMaximalCliques(lstNewPMC);
 
         stop = high_resolution_clock::now();
         auto duration4 = duration_cast<microseconds>(stop-start);
-        cout << "new PMCs : " << duration4.count() << endl;
-
+        lstTimes.push_back(duration4.count());
+        
         start = high_resolution_clock::now();
 
-        //Construct good triplets
+        //Construct good triples
         //For each triplet, it contains minimal separator index, full block index, and pmc index
-        vector<vector<int>> lstTripletIdx = MFVS::constructGoodTriplet(lstMinSeps, lstFullBlock, lstOldPMC);
+        vector<vector<int>> lstTripletIdx = MFVS::constructGoodTriples(lstMinSeps, lstFullBlock, lstOldPMC);
 
         stop = high_resolution_clock::now();
         auto duration5 = duration_cast<microseconds>(stop-start);
-        cout << "Triple : " << duration5.count() << endl;
+        lstTimes.push_back(duration5.count());
 
-        cout << "Total : " << duration1.count() + duration2.count() + duration3.count() + duration5.count() << endl;
+        int oldTotal = duration1.count() + duration2.count() + duration3.count() + duration5.count();
+        int newTotal = duration1.count() + duration2.count() + duration4.count() + duration5.count();
+        lstTimes.push_back(oldTotal);
+        lstTimes.push_back(newTotal);
+
+        return lstTimes;
     }
 }

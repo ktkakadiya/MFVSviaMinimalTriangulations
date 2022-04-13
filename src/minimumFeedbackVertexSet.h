@@ -8,7 +8,7 @@ using namespace std;
 
 namespace MFVS
 {
-    void findMinimumFeedbackVertexSet(Graph* graph);
+    vector<int> findMinimumFeedbackVertexSet(Graph* graph);
 }
 
 #endif //MINFVS_H

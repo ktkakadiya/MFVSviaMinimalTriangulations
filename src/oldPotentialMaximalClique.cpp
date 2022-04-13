@@ -11,11 +11,11 @@ using namespace std;
 namespace MFVS
 {
     /**
-     * @brief DFS traversal for marking connection vector of clique
+     * @brief DFS traversal for setting the connection vector of clique
      * 
-     * @param graph 
-     * @param nodeVal 
-     * @param conNode 
+     * @param graph Graph object
+     * @param nodeVal Current node
+     * @param conNode Node connection vector
      */
     void cliqueDFS(Graph* graph, int nodeVal, int* conNode)
     {
@@ -36,8 +36,8 @@ namespace MFVS
     /**
      * @brief Check whether gven set of vectors is a potential maximal clique for given graph
      * 
-     * @param graph 
-     * @param vecNodes 
+     * @param graph Graph object
+     * @param vecNodes Node vertex set
      * @return true 
      * @return false 
      */
@@ -81,6 +81,13 @@ namespace MFVS
         return true;
     }
 
+    /**
+     * @brief Get the maximum cardinality order for given graph
+     * It is used for adding one more vertex to current potential maximal clique
+     * 
+     * @param graph Graph object
+     * @return vector<int> 
+     */
     vector<int> maxCardinalityOrder(Graph* graph)
     {
         int n = graph->getTotalNodes();
@@ -120,6 +127,16 @@ namespace MFVS
         return lstOrder; 
     }
 
+    /**
+     * @brief Add one more vertex to current potential maximal cliques
+     * 
+     * @param graph Graph object
+     * @param lstPMC List of current potential maximal cliques
+     * @param lstMinSep List of all minimal separators
+     * @param lstSubMinSep List of all minimal separators in the subgraph
+     * @param curNode Current node
+     * @return vector<vector<int>> 
+     */
     vector<vector<int>> oneMoreVertex(Graph* graph, vector<vector<int>>& lstPMC, vector<vector<int>>& lstMinSep, vector<vector<int>>& lstSubMinSep, int curNode)
     {
         vector<vector<int>> lstNewPMC, lstNewPMCtemp;
@@ -192,9 +209,9 @@ namespace MFVS
     }
     
     /**
-     * @brief Get the All Potential Maximal Cliques for given graph
+     * @brief Get the All Potential Maximal Cliques for Graph object using old method [2]
      * 
-     * @param graph 
+     * @param graph Graph object
      * @return vector<vector<int>> 
      */
     vector<vector<int>> getOldAllPotentialMaximalCliques(Graph* graph)

@@ -6,13 +6,13 @@ using namespace std;
 namespace MFVS
 {
     /**
-     * @brief Run DFS of given node to find its associated component
+     * @brief Run the DFS on the given node to find its associated component
      * 
-     * @param graph 
-     * @param nodeVal 
-     * @param conNodes 
-     * @param curIndex 
-     * @param curComponent 
+     * @param graph Graph
+     * @param nodeVal Current node
+     * @param conNodes Node connection vector
+     * @param curIndex Current index of the node
+     * @param curComponent Current component - list of nodes
      * @return int 
      */
     int componentDFS(Graph* graph, int nodeVal, int* conNodes, int curIndex, vector<int> &curComponent)
@@ -39,8 +39,8 @@ namespace MFVS
     /**
      * @brief Get the Full Components of the graph G[V/X] has any full components
      * 
-     * @param graph G = (V,E)
-     * @param vecNodes X
+     * @param graph Graph object G = (V,E)
+     * @param vecNodes Vertex set X
      * @return vector<vector<int>> 
      */
     vector<vector<int>> getFullComponents(Graph* graph, vector<int>& vecNodes)
@@ -75,39 +75,10 @@ namespace MFVS
     }
 
     /**
-     * @brief Computes component size by DFS
-     * 
-     * @param graph 
-     * @param nodeVal 
-     * @param conNodes 
-     * @param curIndex
-     * @return int 
-     */
-    int getComponentSizeDFS(Graph* graph, int nodeVal, int* conNodes, int curIndex)
-    {
-        conNodes[nodeVal] = 1;
-
-        int uCompSize = 0;
-        for(int i : graph->mapNeighbor[nodeVal])
-        {
-            if(conNodes[i] == 0)
-            {
-                uCompSize += getComponentSizeDFS(graph, i, conNodes, curIndex);
-            }
-            else if(conNodes[i] >= 2 && conNodes[i] < curIndex)
-            {
-                conNodes[i] = curIndex;
-                uCompSize++;
-            }
-        }
-        return uCompSize;
-    }
-
-    /**
      * @brief Check whether the graph G[V/X] has any full components
      * 
-     * @param graph G = (V,E)
-     * @param vecNodes X
+     * @param graph Graph object G = (V,E)
+     * @param vecNodes Vertex set X
      * @return vector<vector<int>> 
      */
     bool hasFullComponents(Graph* graph, vector<int>& vecNodes)

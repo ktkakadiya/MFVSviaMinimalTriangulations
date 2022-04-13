@@ -10,17 +10,17 @@ using namespace std;
 namespace MFVS
 {
     /**
-     * @brief Run DFS of given node to find its associated component
+     * @brief Run DFS on the current node to find its associated component
      * 
-     * @param graph 
-     * @param nodeVal 
-     * @param conNodes 
-     * @param curIndex 
-     * @param curComponent 
-     * @return int 
+     * @param graph Graph object
+     * @param nodeVal Current node
+     * @param conNodes Node connection vector
+     * @param curConSet Current connected set
+     * @param resConSet Set of all connected sets
+     * @return 
      */
     void connectedSetDFS(Graph* graph, int nodeVal, int* conNodes, vector<int> curConSet, set<vector<int>> &resConSet)
-    {
+    {          
         conNodes[nodeVal] = 1;
         curConSet.push_back(nodeVal);
         sort(curConSet.begin(), curConSet.end());
@@ -37,6 +37,13 @@ namespace MFVS
         curConSet.pop_back();
     }
 
+    /**
+     * @brief Get the All Contected Sets for current node
+     * 
+     * @param graph Graph object
+     * @param node Current node
+     * @return vector<vector<int>> 
+     */
     vector<vector<int>> getAllContectedSets(Graph* graph, int node)
     {
         int n = graph->getTotalNodes();
@@ -51,6 +58,7 @@ namespace MFVS
         for(int i : graph->mapNeighbor[node])
         {
             MFVS::connectedSetDFS(graph, i, conNodes, curConSet, resConSet);
+            conNodes[i] = 1;
         }
 
         for(vector<int> conSet : resConSet)
@@ -61,12 +69,12 @@ namespace MFVS
     }
 
     /**
-     * @brief Get the Neighborhood Set object
+     * @brief Get the Neighborhood Set of given vertex set
      * 
-     * @param graph 
-     * @param nodeSet 
-     * @param curNode 
-     * @param bIncludeCurNode 
+     * @param graph Graph object
+     * @param nodeSet Vertex set
+     * @param curNode Node associated to vertex set
+     * @param bIncludeCurNode Flag to check whether or not to include neighbors of current node
      * @return vector<int> 
      */
     vector<int> getNeighborhoodSet(Graph* graph, vector<int> nodeSet, int curNode, bool bIncludeCurNode)
@@ -102,7 +110,7 @@ namespace MFVS
     }
 
     /**
-     * @brief Get all the potential maximal cliques for given graph using method proposed in [1]
+     * @brief Get all the potential maximal cliques for given graph using newly proposed method [1]
      * 
      * @param graph Graph object
      * @return vector<vector<int>> 

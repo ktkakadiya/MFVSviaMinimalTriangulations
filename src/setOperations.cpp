@@ -6,10 +6,10 @@ using namespace std;
 namespace SOP
 {
     /**
-     * @brief Check whether a set is subset of other
+     * @brief Check whether a set is subset of other set
      * 
-     * @param vec 
-     * @param subvec 
+     * @param vec Main set
+     * @param subvec Subset
      * @return true 
      * @return false 
      */
@@ -33,10 +33,10 @@ namespace SOP
     }
 
     /**
-     * @brief Get the Union vectors
+     * @brief Get the Union of two vectors
      * 
-     * @param vec1 
-     * @param vec2 
+     * @param vec1 Set 1
+     * @param vec2 Set 2
      * @return vector<int> 
      */
     vector<int> getUnion(vector<int> vec1, vector<int> vec2)
@@ -56,7 +56,7 @@ namespace SOP
     }
 
     /**
-     * @brief Get the Union vectors
+     * @brief Get the Intersection of two vectors
      * 
      * @param vec1 
      * @param vec2 

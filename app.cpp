@@ -22,8 +22,6 @@ Graph initGraph(string strFilePath)
     }
     else
     {
-        cout << "Opened input file!" << endl;
-
         int nNodes;
         inFile >> nNodes;
         Graph graph(nNodes);
@@ -39,11 +37,44 @@ Graph initGraph(string strFilePath)
     return Graph(0);
 }
 
+void writeResults(string strOutputFilePath, vector<int> lstTimes)
+{
+    ofstream outFile(strOutputFilePath);
+
+    if (!outFile.is_open())
+    {
+        cout << "Failed to open output file!" << endl;
+        exit(0);
+    }
+    else if(lstTimes.size() >= 7)
+    {
+        outFile << "Minimal separators : " << lstTimes.at(0) << " microseconds"<< endl;
+        outFile << "Full blocks : " << lstTimes.at(1) << " microseconds"<<  endl;
+        outFile << "Potential Maximal Cliques (old way) : " << lstTimes.at(2) << " microseconds"<<  endl;
+        outFile << "Potential Maximal Cliques (new way) : " << lstTimes.at(3) << " microseconds"<<  endl;
+        outFile << "Good triples : " << lstTimes.at(4) << " microseconds"<<  endl;
+        outFile << "Total time (old way) : " << lstTimes.at(5) << " microseconds"<<  endl;
+        outFile << "Total time (new way) : " << lstTimes.at(6) << " microseconds"<<  endl;
+    }
+    outFile.close();
+}
+
 int main()
 {
-    string strFilePath("testGraphs/manual/graph2.txt");
-    Graph graph = initGraph(strFilePath);
-    //graph.printGraph();
-    MFVS::findMinimumFeedbackVertexSet(&graph);
+    vector<string> lstType{"random_tree"};
+    for(string strType : lstType)
+    {
+        for(int i=5; i<=50; i+=5)
+        { 
+            string strFilePath("testGraphs/" + strType + "/" + strType + "_" + to_string(i) + ".txt");
+            Graph graph = initGraph(strFilePath);
+            //graph.printGraph();
+
+            vector<int> lstTimes = MFVS::findMinimumFeedbackVertexSet(&graph);
+
+            string strOutputFilePath("results/data/" + strType + "/" + strType + "_" + to_string(i) + ".txt");
+            writeResults(strOutputFilePath, lstTimes);
+        }
+    }
     return 0;
 }

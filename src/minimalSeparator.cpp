@@ -8,6 +8,14 @@ using namespace std;
 
 namespace MFVS
 {
+    /**
+     * @brief DFS to enumerate current minimal separator
+     * 
+     * @param graph Grah object
+     * @param nodeVal Current node
+     * @param conNode Node connection vector
+     * @param curMinSep Current minimal separator
+     */
     void minSepDFS(Graph* graph, int nodeVal, int* conNode, vector<int> &curMinSep)
     {
         conNode[nodeVal] = 2;
@@ -25,6 +33,12 @@ namespace MFVS
         }           
     }
 
+    /**
+     * @brief Generate all minimal separators of given graph
+     * 
+     * @param graph 
+     * @return vector<vector<int>> 
+     */
     vector<vector<int>> findMinimalSeparator(Graph* graph)
     {
         vector<vector<int>> lstMinSeps;
@@ -35,6 +49,7 @@ namespace MFVS
         int n = graph->getTotalNodes();
         int conNodes[n] = {0};
 
+        //Check neighborhood set of each vertices as minimal separator
         for(int curNode=0; curNode<n; curNode++)
         {    
             if(graph->mapNeighbor[curNode].size() > 0)
@@ -77,6 +92,7 @@ namespace MFVS
             }
         }
 
+        //Use generated separators to enumerate more separators
         for(int i=0; i<(int)lstMinSeps.size(); i++)
         {
             vector<int> minSep = lstMinSeps[i];
