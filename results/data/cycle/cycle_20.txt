@@ -1,0 +1,7 @@
+Minimal separators : 4005 microseconds
+Full blocks : 5500 microseconds
+Potential Maximal Cliques (old way) : 55819 microseconds
+Potential Maximal Cliques (new way) : 55819 microseconds
+Good triples : 10681 microseconds
+Total time (old way) : 76005 microseconds
+Total time (new way) : 76005 microseconds
